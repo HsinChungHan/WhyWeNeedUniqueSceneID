@@ -1,0 +1,87 @@
+site_name: Scenario ID Documentation
+site_description: 場景 ID 規範與最佳實踐文件集
+site_author: Scenario ID Team
+
+# 文件目錄設定（使用當前目錄）
+docs_dir: docs
+site_dir: site
+
+# 如果部署到子路徑，取消註解以下設定
+# site_url: https://{username}.github.io/{repo-name}/
+# use_directory_urls: true
+
+# 主題配置
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+# Markdown 擴展
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+# 插件
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+# 導航結構
+nav:
+  - 概述: index.md
+  - 提案分析:
+    - PRD User Story 場景 Unique ID 提案分析: SCENARIO_ID_PROPOSAL.md
+  - 痛點分析:
+    - 場景 ID 痛點分析：溝通與文件實作: SCENARIO_ID_PAIN_POINTS_ANALYSIS.md
+  - 命名規範:
+    - 場景 ID 語義化命名規則: SCENARIO_ID_NAMING_RULES.md
+  - 解決方案:
+    - 場景 ID 解決方案：優勢與改進方案: SCENARIO_ID_SOLUTION.md
+  - 跨 Feature 處理:
+    - 場景 ID 跨 Feature 處理規範: SCENARIO_ID_CROSS_FEATURE.md
+  - Codebase 連結:
+    - 場景 ID 與 Codebase 連結規範: SCENARIO_ID_CODEBASE_LINKING.md
+  - QA 與測試:
+    - 場景 ID 對 QA 與測試的價值: SCENARIO_ID_QA_AND_TESTING.md
+
+# 額外配置
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com
+
