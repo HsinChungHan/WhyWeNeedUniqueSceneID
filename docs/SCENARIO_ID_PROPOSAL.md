@@ -154,19 +154,20 @@ User Story: 在賽事開始前發表評論
 
 **格式**：
 ```
-Story ID: {FEATURE_PREFIX}-US-{NUMBER}
-Scenario ID: {STORY_ID}-SC-{NUMBER}
+Story ID: {FEATURE_PREFIX}-{UserStoryName}
+Scenario ID: {FEATURE_PREFIX}-{UserStoryName}-{SceneName}
 ```
 
 **範例**：
-- Story ID: `PC-US-001`（PrematchComment Feature，User Story 001）
-- Scenario ID: `PC-US-001-SC-001`（對應 Story 001，Scenario 001）
-- Scenario ID: `PC-US-001-SC-002`（對應 Story 001，Scenario 002）
+- Story ID: `PC-PublishComment`（PrematchComment Feature，發表評論）
+- Scenario ID: `PC-PublishComment-UserLoggedInWithNickname`（發表評論，用戶已登入且有 nickname）
+- Scenario ID: `PC-PublishComment-UserLoggedInWithoutNickname`（發表評論，用戶已登入但無 nickname）
 
 **優勢**：
 - Scenario ID 包含 Story ID，可以快速識別所屬的 User Story
 - 可以根據 Story ID 查詢所有相關的 Scenarios
 - 可以進行 Story 級別的覆蓋率檢查
+- 語義清晰，不需要查對照表就能理解場景含義
 
 ---
 
@@ -176,19 +177,19 @@ Scenario ID: {STORY_ID}-SC-{NUMBER}
 
 ```yaml
 user_stories:
-  - story_id: "PC-US-001"
+  - story_id: "PC-PublishComment"
     role: "用戶"
     action: "在賽事開始前發表評論"
     goal: "與其他用戶互動"
     priority: "P0"
     scenarios:
-      - scenario_id: "PC-US-001-SC-001"
+      - scenario_id: "PC-PublishComment-UserLoggedInWithNickname"
         name: "已登入且有 nickname 的用戶發表評論"
         description: "當用戶已登入且已有 nickname 時，可以直接發表評論"
         condition: "用戶已登入 && 用戶有 nickname"
         actions: [...]
         expected_result: [...]
-      - scenario_id: "PC-US-001-SC-002"
+      - scenario_id: "PC-PublishComment-UserLoggedInWithoutNickname"
         name: "已登入但無 nickname 的用戶發表評論"
         description: "當用戶已登入但沒有 nickname 時，需要先建立 nickname 再發表評論"
         condition: "用戶已登入 && 用戶無 nickname"
@@ -488,50 +489,149 @@ user_stories:
 
 ### 2.1 ID 命名規範
 
-#### 2.1.1 格式建議
+#### 2.1.1 格式建議（語義化命名）
 
-```
-{FEATURE_PREFIX}-{STORY_NUMBER}-{SCENARIO_NUMBER}
-```
+**推薦格式**：`{FeaturePrefix}-{UserStoryName}-{SceneName}`
 
 **範例**：
-- `PC-US-001-SC-001`：PrematchComment Feature，User Story 001，Scenario 001
-- `LC-US-002-SC-003`：LiveChat Feature，User Story 002，Scenario 003
+- `PC-PublishComment-UserLoggedInWithNickname`：PrematchComment Feature，發表評論，用戶已登入且有 nickname
+- `PC-LikeComment-UserLoggedIn`：PrematchComment Feature，點讚評論，用戶已登入
+- `PC-LikeComment-UserNotLoggedIn`：PrematchComment Feature，點讚評論，用戶未登入
+- `LC-SendMessage-UserLoggedInWithNickname`：LiveChat Feature，發送訊息，用戶已登入且有 nickname
 
-#### 2.1.2 命名規則
+**優勢**：
+- ✅ 語義清晰，一看就懂場景的業務含義
+- ✅ 不需要查對照表，直接從 ID 理解場景
+- ✅ 適合在文件、討論、程式碼中直接使用
+- ✅ AI 可以從 ID 中理解場景的業務含義
+
+---
+
+#### 2.1.2 命名規則詳解
 
 ##### Feature Prefix
 
+**格式**：使用 Feature 名稱的縮寫（2-3 個字母），統一使用大寫字母
+
+**範例**：
+- `PC`：PrematchComment（賽前評論功能）
+- `LC`：LiveChat（即時聊天功能）
+- `RD`：RaceDetail（賽事詳情功能）
+- `UP`：UserProfile（用戶個人資料功能）
+
+**命名原則**：
 - 使用 Feature 名稱的縮寫（2-3 個字母）
 - 統一使用大寫字母
-- 範例：`PC`（PrematchComment）、`LC`（LiveChat）
+- 建立 Feature Prefix 對照表，方便查閱
 
-##### Story Number
+---
 
-- 使用 3 位數字，從 001 開始
-- 格式：`US-001`、`US-002`、`US-003`
+##### UserStory 命名規則
 
-##### Scenario Number
+**格式**：使用動詞+名詞的組合，採用 PascalCase
 
-- 使用 3 位數字，從 001 開始
-- 格式：`SC-001`、`SC-002`、`SC-003`
+**範例**：
+- `PublishComment`：發表評論
+- `LikeComment`：點讚評論
+- `ReplyComment`：回覆評論
+- `SendMessage`：發送訊息
+- `JoinChatroom`：加入聊天室
+- `BlockUser`：封鎖用戶
+
+**命名原則**：
+- 使用動詞開頭（Publish、Like、Reply、Send、Join、Block）
+- 使用名詞結尾（Comment、Message、Chatroom、User）
+- 採用 PascalCase（每個單字首字母大寫）
+- 保持簡潔（2-3 個單字）
+
+---
+
+##### Scene 命名規則
+
+**格式**：使用描述性名詞或形容詞+名詞，採用 PascalCase
+
+**範例**：
+- `UserLoggedIn`：用戶已登入
+- `UserNotLoggedIn`：用戶未登入
+- `UserLoggedInWithNickname`：用戶已登入且有 nickname
+- `UserLoggedInWithoutNickname`：用戶已登入但無 nickname
+- `NetworkError`：網路錯誤
+- `ValidationError`：驗證錯誤
+- `EmptyState`：空狀態
+- `LoadingState`：載入中狀態
+
+**命名原則**：
+- 使用描述性名詞或形容詞+名詞
+- 採用 PascalCase（每個單字首字母大寫）
+- 保持簡潔（2-4 個單字）
+- 避免使用動詞（Scene 是狀態描述，不是動作描述）
+
+---
 
 ##### 完整格式
 
 ```
-{FEATURE_PREFIX}-US-{STORY_NUMBER}-SC-{SCENARIO_NUMBER}
+{FeaturePrefix}-{UserStoryName}-{SceneName}
 ```
 
-#### 2.1.3 子場景 ID（可選）
+**完整範例**：
+- `PC-PublishComment-UserLoggedInWithNickname`
+- `PC-PublishComment-UserLoggedInWithoutNickname`
+- `PC-PublishComment-UserNotLoggedIn`
+- `PC-LikeComment-UserLoggedIn`
+- `PC-LikeComment-UserNotLoggedIn`
+- `LC-SendMessage-UserLoggedInWithNickname`
+- `LC-SendMessage-UserNotLoggedIn`
 
-如果需要更細粒度的場景劃分，可以使用子場景 ID：
+---
 
-```
-{FEATURE_PREFIX}-US-{STORY_NUMBER}-SC-{SCENARIO_NUMBER}-SUB-{SUB_SCENARIO_NUMBER}
-```
+#### 2.1.3 命名規範檢查清單
 
-**範例**：
-- `PC-US-001-SC-001-SUB-001`：PrematchComment Feature，User Story 001，Scenario 001，Sub Scenario 001
+##### Feature Prefix 檢查
+
+- [ ] Feature Prefix 使用 2-3 個大寫字母
+- [ ] Feature Prefix 在對照表中已定義
+- [ ] Feature Prefix 與 Feature 全名對應關係明確
+
+##### UserStory 命名檢查
+
+- [ ] UserStory 使用動詞+名詞組合
+- [ ] UserStory 採用 PascalCase
+- [ ] UserStory 保持簡潔（2-3 個單字）
+- [ ] UserStory 語義清晰，一看就懂
+
+##### Scene 命名檢查
+
+- [ ] Scene 使用描述性名詞或形容詞+名詞
+- [ ] Scene 採用 PascalCase
+- [ ] Scene 保持簡潔（2-4 個單字）
+- [ ] Scene 避免使用動詞
+- [ ] Scene 語義清晰，一看就懂
+
+##### 完整 ID 檢查
+
+- [ ] 完整 ID 格式為 `{FeaturePrefix}-{UserStoryName}-{SceneName}`
+- [ ] 完整 ID 語義清晰，不需要查對照表就能理解
+- [ ] 完整 ID 長度適中（25-40 字元）
+
+---
+
+#### 2.1.4 與舊格式的對應關係（遷移參考）
+
+如果需要從舊格式遷移到新格式，可以參考以下對應關係：
+
+| 舊格式 | 新格式（語義化） | 說明 |
+|--------|----------------|------|
+| `PC-US-001-SC-001` | `PC-PublishComment-UserLoggedInWithNickname` | 發表評論，已登入且有 nickname |
+| `PC-US-001-SC-002` | `PC-PublishComment-UserLoggedInWithoutNickname` | 發表評論，已登入但無 nickname |
+| `PC-US-001-SC-003` | `PC-PublishComment-UserNotLoggedIn` | 發表評論，未登入 |
+| `PC-US-002-SC-001` | `PC-LikeComment-UserLoggedIn` | 點讚評論，已登入 |
+| `PC-US-002-SC-002` | `PC-LikeComment-UserNotLoggedIn` | 點讚評論，未登入 |
+
+**遷移建議**：
+- 建立舊格式與新格式的對照表
+- 逐步遷移，先在新 Feature 使用新格式
+- 保留舊格式的歷史記錄，方便追溯
 
 ---
 
@@ -543,13 +643,13 @@ user_stories:
 
 ```yaml
 user_stories:
-  - story_id: "PC-US-001"
+  - story_id: "PC-PublishComment"
     role: "用戶"
     action: "在賽事開始前發表評論"
     goal: "與其他用戶互動"
     priority: "P0"
     scenarios:
-      - scenario_id: "PC-US-001-SC-001"
+      - scenario_id: "PC-PublishComment-UserLoggedInWithNickname"
         name: "已登入且有 nickname 的用戶發表評論"
         description: "當用戶已登入且已有 nickname 時，可以直接發表評論"
         acceptance_criteria:
@@ -557,7 +657,7 @@ user_stories:
           - "評論出現在列表最上方"
         test_cases:
           - "已登入且有 nickname 的用戶可以發表評論"
-      - scenario_id: "PC-US-001-SC-002"
+      - scenario_id: "PC-PublishComment-UserLoggedInWithoutNickname"
         name: "已登入但無 nickname 的用戶發表評論"
         description: "當用戶已登入但沒有 nickname 時，需要先建立 nickname 再發表評論"
         acceptance_criteria:
@@ -565,7 +665,7 @@ user_stories:
           - "用戶建立 nickname 後可以發表評論"
         test_cases:
           - "已登入但無 nickname 的用戶會先建立 nickname 再發表評論"
-      - scenario_id: "PC-US-001-SC-003"
+      - scenario_id: "PC-PublishComment-UserNotLoggedIn"
         name: "未登入用戶發表評論"
         description: "當用戶未登入時，需要先登入再發表評論"
         acceptance_criteria:
@@ -580,18 +680,18 @@ user_stories:
 如果使用 Markdown 格式，建議使用標題層級和 ID 標註：
 
 ```markdown
-## User Story 001: 在賽事開始前發表評論
+## User Story: 在賽事開始前發表評論
 
-**Story ID**: `PC-US-001`
+**Story ID**: `PC-PublishComment`
 
 **角色**: 用戶  
 **行為**: 在賽事開始前發表評論  
 **目標**: 與其他用戶互動  
 **優先級**: P0
 
-### Scenario 001: 已登入且有 nickname 的用戶發表評論
+### Scenario: 已登入且有 nickname 的用戶發表評論
 
-**Scenario ID**: `PC-US-001-SC-001`
+**Scenario ID**: `PC-PublishComment-UserLoggedInWithNickname`
 
 **描述**: 當用戶已登入且已有 nickname 時，可以直接發表評論
 
@@ -830,10 +930,10 @@ features:
         flow_type: Sub
         flow_name: 用戶點擊 Like（含登入檢查）
         scenario_ids:  # 新增場景 ID 對應
-          - PC-US-002-SC-001  # 使用者已登入
-          - PC-US-002-SC-002  # 使用者未登入
+          - PC-LikeComment-UserLoggedIn  # 使用者已登入
+          - PC-LikeComment-UserNotLoggedIn  # 使用者未登入
         scenarios:
-          - scenario_id: PC-US-002-SC-001  # 新增場景 ID
+          - scenario_id: PC-LikeComment-UserLoggedIn  # 新增場景 ID
             name: 使用者已登入
             description: 當用戶已登入時的行為
             ...
@@ -856,9 +956,9 @@ features:
 ```markdown
 ## Test Scenarios
 
-### Scenario: PC-US-002-SC-001 - 使用者已登入
+### Scenario: PC-LikeComment-UserLoggedIn - 使用者已登入
 
-**對應 PRD 場景**: PC-US-002-SC-001  
+**對應 PRD 場景**: PC-LikeComment-UserLoggedIn  
 **對應 Flow**: PC-SUB-004  
 **描述**: 當用戶已登入時的行為
 
@@ -901,8 +1001,8 @@ features:
 **優先級**: P0  
 **所屬 Feature**: PrematchComment  
 **相關場景**: 
-- PC-US-002-SC-001 (使用者已登入)
-- PC-US-002-SC-002 (使用者未登入)
+- PC-LikeComment-UserLoggedIn (使用者已登入)
+- PC-LikeComment-UserNotLoggedIn (使用者未登入)
 
 **描述**: 
 實作 ToggleLikeUseCase，支援用戶點擊 Like 按鈕的功能。
@@ -913,8 +1013,8 @@ features:
 - [ ] 實作 Like 狀態同步邏輯
 
 **驗收條件**:
-- [ ] 場景 PC-US-002-SC-001 通過測試
-- [ ] 場景 PC-US-002-SC-002 通過測試
+- [ ] 場景 PC-LikeComment-UserLoggedIn 通過測試
+- [ ] 場景 PC-LikeComment-UserNotLoggedIn 通過測試
 ```
 
 ---
@@ -1317,28 +1417,29 @@ features:
 
 ## 附錄
 
-### A. 場景 ID 命名範例
+### A. 場景 ID 命名範例（語義化）
 
 ```
-PC-US-001-SC-001: PrematchComment Feature, User Story 001, Scenario 001
-PC-US-001-SC-002: PrematchComment Feature, User Story 001, Scenario 002
-PC-US-002-SC-001: PrematchComment Feature, User Story 002, Scenario 001
-LC-US-001-SC-001: LiveChat Feature, User Story 001, Scenario 001
+PC-PublishComment-UserLoggedInWithNickname: PrematchComment Feature, 發表評論, 用戶已登入且有 nickname
+PC-PublishComment-UserLoggedInWithoutNickname: PrematchComment Feature, 發表評論, 用戶已登入但無 nickname
+PC-LikeComment-UserLoggedIn: PrematchComment Feature, 點讚評論, 用戶已登入
+PC-LikeComment-UserNotLoggedIn: PrematchComment Feature, 點讚評論, 用戶未登入
+LC-SendMessage-UserLoggedInWithNickname: LiveChat Feature, 發送訊息, 用戶已登入且有 nickname
 ```
 
 ---
 
-### B. PRD 範例（含場景 ID）
+### B. PRD 範例（含場景 ID，語義化命名）
 
 ```yaml
 user_stories:
-  - story_id: "PC-US-001"
+  - story_id: "PC-PublishComment"
     role: "用戶"
     action: "在賽事開始前發表評論"
     goal: "與其他用戶互動"
     priority: "P0"
     scenarios:
-      - scenario_id: "PC-US-001-SC-001"
+      - scenario_id: "PC-PublishComment-UserLoggedInWithNickname"
         name: "已登入且有 nickname 的用戶發表評論"
         description: "當用戶已登入且已有 nickname 時，可以直接發表評論"
         acceptance_criteria:
@@ -1350,7 +1451,7 @@ user_stories:
 
 ---
 
-### C. flow_spec.yaml 範例（含場景 ID）
+### C. flow_spec.yaml 範例（含場景 ID，語義化命名）
 
 ```yaml
 features:
@@ -1360,10 +1461,10 @@ features:
         flow_type: Sub
         flow_name: 用戶點擊 Like（含登入檢查）
         scenario_ids:
-          - PC-US-002-SC-001
-          - PC-US-002-SC-002
+          - PC-LikeComment-UserLoggedIn
+          - PC-LikeComment-UserNotLoggedIn
         scenarios:
-          - scenario_id: PC-US-002-SC-001
+          - scenario_id: PC-LikeComment-UserLoggedIn
             name: 使用者已登入
             description: 當用戶已登入時的行為
             ...
@@ -1371,14 +1472,14 @@ features:
 
 ---
 
-### D. TDD Test Scenarios 範例（含場景 ID）
+### D. TDD Test Scenarios 範例（含場景 ID，語義化命名）
 
 ```markdown
 ## Test Scenarios
 
-### Scenario: PC-US-002-SC-001 - 使用者已登入
+### Scenario: PC-LikeComment-UserLoggedIn - 使用者已登入
 
-**對應 PRD 場景**: PC-US-002-SC-001  
+**對應 PRD 場景**: PC-LikeComment-UserLoggedIn  
 **對應 Flow**: PC-SUB-004  
 **描述**: 當用戶已登入時的行為
 
